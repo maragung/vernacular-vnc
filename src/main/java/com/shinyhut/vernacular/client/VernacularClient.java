@@ -7,13 +7,14 @@ import com.shinyhut.vernacular.protocol.initialization.Initializer;
 import com.shinyhut.vernacular.utils.KeySyms;
 import lombok.Getter;
 
-import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+// Android has no java.awt: only the VK_* int constants are used (inlined at compile time),
+// so the class-level KeyEvent reference that handleKeyEvent(KeyEvent) used to create is gone.
 import static java.awt.event.KeyEvent.*;
 import static java.util.stream.IntStream.range;
 
@@ -190,28 +191,6 @@ public class VernacularClient {
      */
     public void scrollDown() {
         click(5);
-    }
-
-    /**
-     * Presses, releases or 'types' the key represented by the specified KeyEvent.
-     * <p>
-     * The event type should be one of KEY_PRESSED, KEY_RELEASED or KEY_TYPED. All other event types are ignored.
-     *
-     * @param event The KeyEvent to handle
-     * @see java.awt.event.KeyEvent KeyEvent
-     */
-    public void handleKeyEvent(KeyEvent event) {
-        KeySyms.map(event.getKeyCode(), event.getKeyChar(), event.isShiftDown()).ifPresent(k -> {
-            switch (event.getID()) {
-                case KEY_PRESSED:
-                case KEY_RELEASED:
-                    updateKey(k, event.getID() == KEY_PRESSED);
-                    break;
-                case KEY_TYPED:
-                    type(k);
-                    break;
-            }
-        });
     }
 
     /**
